@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Service Worker</title>
-    <link rel="stylesheet" href="/styles/main.css">
+    <link rel="stylesheet" href="./styles/main.css">
 </head>
 <h1>Service Worker</h1>
 <body>
-    <img src="/images/image.jpg">
+    <img src="./images/image.jpg">
     <script>
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('./service-worker.js')
@@ -19,6 +19,6 @@
                     });
         }
     </script>
-    <script src="/script/main.js"></script>
+    <script src="./script/main.js"></script>
 </body>
 </html>
