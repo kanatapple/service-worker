@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Sync Test</title>
+</head>
+<body>
+    <h1>Service Worker Sync Test</h1>
+    <button id="button">sync</button>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./service-worker.js')
+                     .then(registration => {
+                         console.log(`ServiceWorker registration successful with scope: ${registration.scope}`);
+
+                         return navigator.serviceWorker.ready;
+                     })
+                     .then(registration => {
+                         document.getElementById('button').addEventListener('click', () => {
+                             registration.sync.register('sync-test')
+                                         .then(() => {
+                                             console.log('sync registerd');
+                                         })
+                                         .catch(err => {
+                                             console.log(`ServiceWorker sync registration failed: ${err}`);
+                                         });
+                         }, false);
+                     })
+                     .catch(err => {
+                         console.log(`ServiceWorker registration failed: ${err}`);
+                     });
+        }
+    </script>
+</body>
+</html>

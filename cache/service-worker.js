@@ -10,6 +10,10 @@ const urlsToCache = [
 
 self.addEventListener('install', event/* InstallEvent */ => {
     console.log('install');
+    
+    // Service Worker 更新時に wating 状態をスキップしたい場合
+    // event.waitUntil(self.skipWaiting());
+    
     // インストール処理
     event.waitUntil(
         caches.open(CACHE_NAME)
@@ -20,14 +24,17 @@ self.addEventListener('install', event/* InstallEvent */ => {
     );
 });
 
-self.addEventListener('activate', function(event) {
+self.addEventListener('activate', event => {
     console.log('activate');
     var cacheWhitelist = [CACHE_NAME];
 
+    // すぐにControllerになって欲しい時は claim を呼ぶ
+    // event.waitUntil(self.clients.claim());
+    
     event.waitUntil(
-        caches.keys().then(function(cacheNames) {
+        caches.keys().then(cacheNames => {
             return Promise.all(
-                cacheNames.map(function(cacheName) {
+                cacheNames.map(cacheName => {
                     if (cacheWhitelist.indexOf(cacheName) === -1) {
                         return caches.delete(cacheName);
                     }
@@ -37,11 +44,12 @@ self.addEventListener('activate', function(event) {
     );
 });
 
-self.addEventListener('fetch', function(event) {
+self.addEventListener('fetch', event => {
     console.log('fetch', event.request);
+    
     event.respondWith(
         caches.match(event.request)
-            .then(function(response) {
+            .then(response => {
                 if (response) {
                     return response;
                 }
@@ -52,7 +60,7 @@ self.addEventListener('fetch', function(event) {
                 let fetchRequest = event.request.clone();
 
                 return fetch(fetchRequest)
-                    .then(function(response) {
+                    .then(response => {
                         if (!response || response.status !== 200 || response.type !== 'basic') {
                             return response;
                         }
@@ -63,7 +71,7 @@ self.addEventListener('fetch', function(event) {
                         let responseToCache = response.clone();
 
                         caches.open(CACHE_NAME)
-                            .then(function(cache) {
+                            .then(cache => {
                                 cache.put(event.request, responseToCache);
                             });
 

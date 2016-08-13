@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Push Test</title>
+    <link rel="manifest" href="./manifest.json">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/primer/2.0.2/primer.css">
+</head>
+<body>
+    <h1>Service Worker Push Test</h1>
+    <dl class="form">
+        <dt><label>Endpoint URL</label></dt>
+        <dd><textarea id="subscription-endpoint" class="input-block"></textarea></dd>
+    </dl>
+    <script>
+        if ('serviceWorker' in navigator) {
+            document.addEventListener('DOMContentLoaded', () => {
+                let endpoint = document.querySelector('#subscription-endpoint');
+
+                navigator.serviceWorker.register('./service-worker.js')
+                         .then(registration => {
+                             console.log(`ServiceWorker registration successful with scope: ${registration.scope}`);
+
+                             return navigator.serviceWorker.ready;
+                         })
+                         .then(registration => {
+                             registration.pushManager.subscribe({userVisibleOnly: true})
+                                         .then(subscription => {
+                                             endpoint.value = subscription.endpoint;
+                                             console.log(`GCM EndPoint is: ${subscription.endpoint}`);
+                                         })
+                                         .catch(err => {
+                                             console.log(err);
+                                         });
+                         })
+                         .catch(err => {
+                             console.log(`ServiceWorker registration failed: ${err}`);
+                         });
+
+                navigator.serviceWorker.addEventListener('controllerchange', (e) => {
+                    console.log(e);
+                    console.log(navigator.serviceWorker.controller);
+                }, false);
+            }, false);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "name": "SW Push Notification",
+  "short_name": "SW Push Notification",
+  "icons": [{
+    "src": "https://kanatapple.github.io/service-worker/push/images/image.jpg",
+    "sizes": "192x192",
+    "type": "image/jpg"
+  }],
+  "start_url": "./index.html",
+  "display": "standalone",
+  "gcm_sender_id": "621388437768"
+}
