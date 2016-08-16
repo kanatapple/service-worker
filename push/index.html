@@ -16,45 +16,6 @@
         <dt><label>Public Key</label></dt>
         <dd><textarea id="subscription-public-key" class="input-block"></textarea></dd>
     </dl>
-    <script>
-        if ('serviceWorker' in navigator) {
-            document.addEventListener('DOMContentLoaded', () => {
-                let endpoint = document.querySelector('#subscription-endpoint');
-                let key = document.querySelector('#subscription-public-key');
-                let auth = document.querySelector('#subscription-auth');
-
-                navigator.serviceWorker.register('./service-worker.js')
-                         .then(registration => {
-                             console.log(`ServiceWorker registration successful with scope: ${registration.scope}`);
-
-                             return navigator.serviceWorker.ready;
-                         })
-                         .then(registration => {
-                             registration.pushManager.subscribe({userVisibleOnly: true})
-                                         .then(subscription => {
-                                             var rawKey = subscription.getKey ? subscription.getKey('p256dh') : '';
-                                             key.value = rawKey ? btoa(String.fromCharCode.apply(null, new Uint8Array(rawKey))) : '';
-
-                                             var rawAuthSecret = subscription.getKey ? subscription.getKey('auth') : '';
-                                             auth.value = rawAuthSecret ? btoa(String.fromCharCode.apply(null, new Uint8Array(rawAuthSecret))) : '';
-
-                                             endpoint.value = subscription.endpoint;
-                                             console.log(`GCM EndPoint is: ${subscription.endpoint}`);
-                                         })
-                                         .catch(err => {
-                                             console.log(err);
-                                         });
-                         })
-                         .catch(err => {
-                             console.log(`ServiceWorker registration failed: ${err}`);
-                         });
-
-                navigator.serviceWorker.addEventListener('controllerchange', (e) => {
-                    console.log(e);
-                    console.log(navigator.serviceWorker.controller);
-                }, false);
-            }, false);
-        }
-    </script>
+    <script src="./script/main.js"></script>
 </body>
 </html>

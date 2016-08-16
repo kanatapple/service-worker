@@ -1,13 +1,13 @@
 'use strict';
 
-self.addEventListener('install', event => {
+self.addEventListener('install', (event) => {
     console.info('install', event);
 });
 
-self.addEventListener('activate', event => {
+self.addEventListener('activate', (event) => {
     console.info('activate', event);
 });
 
-self.addEventListener('sync', event => {
+self.addEventListener('sync', (event) => {
     console.info('sync', event);
 });

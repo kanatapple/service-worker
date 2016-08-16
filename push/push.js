@@ -9,7 +9,7 @@ const data = {
     'endpoint': '********',
     'userAuth': '********',
     'userPublicKey': '********'
-}
+};
 
 push.sendNotification(data.endpoint, {
     payload:       'push test for service worker',
