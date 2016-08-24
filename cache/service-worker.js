@@ -1,6 +1,6 @@
 'use strict';
 
-const CACHE_NAME = 'cache-v1';
+const CACHE_NAME = 'cache-v2';
 const urlsToCache = [
     './',
     './styles/main.css',
@@ -12,13 +12,15 @@ self.addEventListener('install', (event)/* InstallEvent */ => {
     console.info('install', event);
     
     // Service Worker 更新時に waiting 状態をスキップしたい場合
-    event.waitUntil(self.skipWaiting());
+    // event.waitUntil(self.skipWaiting());
     
     // インストール処理
     event.waitUntil(
         caches.open(CACHE_NAME)
               .then((cache) => {
                   console.log('Opened cache');
+                  
+                  // 指定されたリソースをキャッシュに追加する
                   return cache.addAll(urlsToCache);
               })
     );
@@ -36,6 +38,7 @@ self.addEventListener('activate', (event) => {
         caches.keys().then((cacheNames) => {
             return Promise.all(
                 cacheNames.map((cacheName) => {
+                    // ホワイトリストにないキャッシュ(古いキャッシュ)は削除する
                     if (cacheWhitelist.indexOf(cacheName) === -1) {
                         return caches.delete(cacheName);
                     }
